@@ -1,0 +1,6 @@
+{
+  "name": "Student Management Portal",
+  "description": "Administrative portal to manage student enrollment, academic records, performance analytics, and REST API access with MongoDB persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

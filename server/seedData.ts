@@ -1,0 +1,364 @@
+import { Student } from './types.ts';
+
+export const initialStudents: Student[] = [
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9001",
+    studentId: "STU-2023-0101",
+    firstName: "Elena",
+    lastName: "Rostova",
+    email: "e.rostova@university.edu",
+    phone: "(555) 234-5678",
+    dateOfBirth: "2003-04-14",
+    gender: "Female",
+    department: "Computer Science",
+    yearLevel: "Junior",
+    status: "Active",
+    gpa: 3.92,
+    creditsEarned: 78,
+    address: {
+      street: "452 Campus Drive, Apt 3B",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02138"
+    },
+    emergencyContact: {
+      name: "Mikhail Rostov",
+      relationship: "Father",
+      phone: "(555) 876-5432"
+    },
+    enrollmentDate: "2023-09-01",
+    notes: "President of the Robotics and AI Society; Dean's Honor Roll recipient 2024.",
+    createdAt: "2023-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-15T10:30:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9002",
+    studentId: "STU-2022-0045",
+    firstName: "Marcus",
+    lastName: "Chen",
+    email: "m.chen@university.edu",
+    phone: "(555) 345-6789",
+    dateOfBirth: "2002-11-20",
+    gender: "Male",
+    department: "Data Science",
+    yearLevel: "Senior",
+    status: "Active",
+    gpa: 3.85,
+    creditsEarned: 110,
+    address: {
+      street: "782 Beacon Street",
+      city: "Boston",
+      state: "MA",
+      zipCode: "02215"
+    },
+    emergencyContact: {
+      name: "Grace Chen",
+      relationship: "Mother",
+      phone: "(555) 987-6543"
+    },
+    enrollmentDate: "2022-09-01",
+    notes: "Published paper on distributed streaming inference at KDD workshop.",
+    createdAt: "2022-09-01T08:00:00.000Z",
+    updatedAt: "2026-08-20T14:15:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9003",
+    studentId: "STU-2024-0210",
+    firstName: "Amina",
+    lastName: "Al-Mansoor",
+    email: "a.almansoor@university.edu",
+    phone: "(555) 456-7890",
+    dateOfBirth: "2005-02-08",
+    gender: "Female",
+    department: "Mechanical Engineering",
+    yearLevel: "Sophomore",
+    status: "Active",
+    gpa: 3.74,
+    creditsEarned: 45,
+    address: {
+      street: "12 Highland Avenue",
+      city: "Somerville",
+      state: "MA",
+      zipCode: "02143"
+    },
+    emergencyContact: {
+      name: "Tariq Al-Mansoor",
+      relationship: "Guardian",
+      phone: "(555) 654-3210"
+    },
+    enrollmentDate: "2024-09-01",
+    notes: "Formula SAE vehicle chassis aerodynamics lead.",
+    createdAt: "2024-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-02T11:00:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9004",
+    studentId: "STU-2021-0012",
+    firstName: "Devon",
+    lastName: "Kearney",
+    email: "d.kearney@university.edu",
+    phone: "(555) 567-8901",
+    dateOfBirth: "2001-08-19",
+    gender: "Non-Binary",
+    department: "Biology",
+    yearLevel: "Senior",
+    status: "Graduated",
+    gpa: 3.96,
+    creditsEarned: 124,
+    address: {
+      street: "230 River Street",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02139"
+    },
+    emergencyContact: {
+      name: "Sarah Kearney",
+      relationship: "Sister",
+      phone: "(555) 432-1098"
+    },
+    enrollmentDate: "2021-09-01",
+    notes: "Summa Cum Laude; accepted to Harvard Medical School doctoral cohort.",
+    createdAt: "2021-09-01T08:00:00.000Z",
+    updatedAt: "2026-06-01T09:00:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9005",
+    studentId: "STU-2023-0188",
+    firstName: "Liam",
+    lastName: "O'Connor",
+    email: "l.oconnor@university.edu",
+    phone: "(555) 678-9012",
+    dateOfBirth: "2004-06-30",
+    gender: "Male",
+    department: "Business Administration",
+    yearLevel: "Junior",
+    status: "Active",
+    gpa: 3.42,
+    creditsEarned: 65,
+    address: {
+      street: "89 Commonwealth Ave",
+      city: "Boston",
+      state: "MA",
+      zipCode: "02215"
+    },
+    emergencyContact: {
+      name: "Sean O'Connor",
+      relationship: "Father",
+      phone: "(555) 321-0987"
+    },
+    enrollmentDate: "2023-09-01",
+    notes: "Vice President of Undergraduate Investment Management Group.",
+    createdAt: "2023-09-01T08:00:00.000Z",
+    updatedAt: "2026-07-14T16:20:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9006",
+    studentId: "STU-2024-0342",
+    firstName: "Priya",
+    lastName: "Natarajan",
+    email: "p.natarajan@university.edu",
+    phone: "(555) 789-0123",
+    dateOfBirth: "2005-10-12",
+    gender: "Female",
+    department: "Electrical Engineering",
+    yearLevel: "Freshman",
+    status: "Active",
+    gpa: 3.88,
+    creditsEarned: 28,
+    address: {
+      street: "56 Elm Street",
+      city: "Somerville",
+      state: "MA",
+      zipCode: "02144"
+    },
+    emergencyContact: {
+      name: "Kavita Natarajan",
+      relationship: "Mother",
+      phone: "(555) 210-9876"
+    },
+    enrollmentDate: "2025-09-01",
+    notes: "Merit Scholarship recipient; researching nanoscale semiconductor architectures.",
+    createdAt: "2025-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-20T12:00:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9007",
+    studentId: "STU-2023-0205",
+    firstName: "Julian",
+    lastName: "Vance",
+    email: "j.vance@university.edu",
+    phone: "(555) 890-1234",
+    dateOfBirth: "2003-09-05",
+    gender: "Male",
+    department: "Mathematics",
+    yearLevel: "Junior",
+    status: "Probation",
+    gpa: 2.18,
+    creditsEarned: 52,
+    address: {
+      street: "144 Broadway, Apt 2",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02142"
+    },
+    emergencyContact: {
+      name: "Arthur Vance",
+      relationship: "Father",
+      phone: "(555) 109-8765"
+    },
+    enrollmentDate: "2023-09-01",
+    notes: "Academic intervention plan assigned. Weekly tutoring with Math Learning Center.",
+    createdAt: "2023-09-01T08:00:00.000Z",
+    updatedAt: "2026-10-01T15:45:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9008",
+    studentId: "STU-2022-0199",
+    firstName: "Zoe",
+    lastName: "Kaufman",
+    email: "z.kaufman@university.edu",
+    phone: "(555) 901-2345",
+    dateOfBirth: "2004-03-25",
+    gender: "Female",
+    department: "Psychology",
+    yearLevel: "Senior",
+    status: "Active",
+    gpa: 3.65,
+    creditsEarned: 98,
+    address: {
+      street: "310 Massachusetts Ave",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02139"
+    },
+    emergencyContact: {
+      name: "Rachel Kaufman",
+      relationship: "Mother",
+      phone: "(555) 098-7654"
+    },
+    enrollmentDate: "2022-09-01",
+    notes: "Cognitive Neuroscience lab research assistant under Dr. Sterling.",
+    createdAt: "2022-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-10T13:30:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9009",
+    studentId: "STU-2024-0412",
+    firstName: "Gabriel",
+    lastName: "Santos",
+    email: "g.santos@university.edu",
+    phone: "(555) 012-3456",
+    dateOfBirth: "2004-12-14",
+    gender: "Male",
+    department: "Computer Science",
+    yearLevel: "Sophomore",
+    status: "Active",
+    gpa: 3.58,
+    creditsEarned: 42,
+    address: {
+      street: "68 Main Street",
+      city: "Medford",
+      state: "MA",
+      zipCode: "02155"
+    },
+    emergencyContact: {
+      name: "Eduardo Santos",
+      relationship: "Brother",
+      phone: "(555) 987-1234"
+    },
+    enrollmentDate: "2024-09-01",
+    notes: "Competitive Programming Team member; Hackathon 1st place winner spring 2025.",
+    createdAt: "2024-09-01T08:00:00.000Z",
+    updatedAt: "2026-08-30T10:00:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9010",
+    studentId: "STU-2021-0089",
+    firstName: "Hannah",
+    lastName: "Lindqvist",
+    email: "h.lindqvist@university.edu",
+    phone: "(555) 123-4567",
+    dateOfBirth: "2002-07-04",
+    gender: "Female",
+    department: "Biology",
+    yearLevel: "Graduate",
+    status: "Active",
+    gpa: 3.98,
+    creditsEarned: 140,
+    address: {
+      street: "21 Oxford Street",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02138"
+    },
+    emergencyContact: {
+      name: "Bjorn Lindqvist",
+      relationship: "Father",
+      phone: "(555) 876-2345"
+    },
+    enrollmentDate: "2021-09-01",
+    notes: "Graduate Teaching Assistant for Molecular Genetics BIOL-301.",
+    createdAt: "2021-09-01T08:00:00.000Z",
+    updatedAt: "2026-10-05T09:15:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9011",
+    studentId: "STU-2023-0319",
+    firstName: "Dante",
+    lastName: "Washington",
+    email: "d.washington@university.edu",
+    phone: "(555) 234-8901",
+    dateOfBirth: "2003-10-28",
+    gender: "Male",
+    department: "Mechanical Engineering",
+    yearLevel: "Junior",
+    status: "Inactive",
+    gpa: 3.12,
+    creditsEarned: 60,
+    address: {
+      street: "514 Tremont Street",
+      city: "Boston",
+      state: "MA",
+      zipCode: "02116"
+    },
+    emergencyContact: {
+      name: "Monique Washington",
+      relationship: "Mother",
+      phone: "(555) 765-4321"
+    },
+    enrollmentDate: "2023-09-01",
+    notes: "On approved medical leave of absence for Fall 2026. Anticipated return Spring 2027.",
+    createdAt: "2023-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-01T14:00:00.000Z"
+  },
+  {
+    _id: "661f1a2b3c4d5e6f7a8b9012",
+    studentId: "STU-2022-0402",
+    firstName: "Mei-Ling",
+    lastName: "Zhou",
+    email: "ml.zhou@university.edu",
+    phone: "(555) 345-9012",
+    dateOfBirth: "2003-01-17",
+    gender: "Female",
+    department: "Data Science",
+    yearLevel: "Senior",
+    status: "Active",
+    gpa: 3.89,
+    creditsEarned: 104,
+    address: {
+      street: "90 Kirkland St, Apt 4",
+      city: "Cambridge",
+      state: "MA",
+      zipCode: "02138"
+    },
+    emergencyContact: {
+      name: "Wei Zhou",
+      relationship: "Father",
+      phone: "(555) 654-9870"
+    },
+    enrollmentDate: "2022-09-01",
+    notes: "Interning at MIT Lincoln Laboratory in automated target recognition.",
+    createdAt: "2022-09-01T08:00:00.000Z",
+    updatedAt: "2026-09-18T16:00:00.000Z"
+  }
+];
