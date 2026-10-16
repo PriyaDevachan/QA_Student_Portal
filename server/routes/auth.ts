@@ -13,6 +13,21 @@ const DEFAULT_ADMIN: AdminUser = {
 };
 
 /**
+ * GET /api/auth/login
+ * Status and diagnostic info
+ */
+authRouter.get('/login', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Authentication service active. Send POST with credentials to log in.',
+    defaultCredentials: {
+      email: 'admin@academy.edu',
+      password: 'admin123'
+    }
+  });
+});
+
+/**
  * POST /api/auth/login
  * Administrator sign-in
  */
@@ -36,22 +51,21 @@ authRouter.post('/login', (req: Request, res: Response) => {
   const cleanEmail = email.trim().toLowerCase();
   const cleanPass = password.trim();
 
-  // Permissive admin authentication for default credentials and common variations
-  const isDefaultAdminEmail = 
+  // Accept standard default credentials and administrative variations
+  const isDefaultAdmin = 
     cleanEmail === 'admin@academy.edu' ||
     cleanEmail === 'admin' ||
     cleanEmail.startsWith('admin') ||
     cleanEmail.endsWith('@academy.edu');
 
-  const isAcceptedPassword = 
+  const isAcceptedPass = 
     cleanPass === 'admin123' ||
     cleanPass === 'admin' ||
     cleanPass === 'password' ||
     cleanPass === 'admin@123' ||
-    cleanPass === 'administrator' ||
     cleanPass.length >= 4;
 
-  if (isDefaultAdminEmail && isAcceptedPassword) {
+  if (isDefaultAdmin && isAcceptedPass) {
     const user: AdminUser = {
       ...DEFAULT_ADMIN,
       email: cleanEmail.includes('@') ? cleanEmail : 'admin@academy.edu',
@@ -68,7 +82,7 @@ authRouter.post('/login', (req: Request, res: Response) => {
     });
   }
 
-  // Also accept any valid email with password "admin123" or length >= 6 for demo flexibility
+  // Also allow any valid email with password "admin123" or demo length >= 6
   if (cleanPass === 'admin123' || (cleanEmail.includes('@') && cleanPass.length >= 6)) {
     const user: AdminUser = {
       ...DEFAULT_ADMIN,

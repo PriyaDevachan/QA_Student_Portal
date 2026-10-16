@@ -56,7 +56,15 @@ async function startServer() {
     });
   });
 
-  // Vite middleware in dev or static files in production
+  // Strict API 404 handler: Any unmatched /api/* route MUST return JSON, NEVER fall through to HTML!
+  app.all('/api/*', (req, res) => {
+    res.status(404).json({
+      success: false,
+      error: `API route ${req.method} ${req.path} was not found.`
+    });
+  });
+
+  // Vite middleware in dev or static files in production (only for non-API routes)
   if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
