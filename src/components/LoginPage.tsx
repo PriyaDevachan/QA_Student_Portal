@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.tsx';
-import { Lock, Mail, ArrowRight, ShieldCheck, Database, KeyRound, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, Database, KeyRound, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { login, quickDemoLogin } = useAuth();
   const [email, setEmail] = useState('admin@academy.edu');
   const [password, setPassword] = useState('admin123');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -13,20 +14,23 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!email.trim()) {
+    const cleanEmail = email.trim();
+    const cleanPass = password.trim();
+
+    if (!cleanEmail) {
       setErrorMessage('Please enter an administrator email address.');
       return;
     }
-    if (!password) {
+    if (!cleanPass) {
       setErrorMessage('Please enter your password.');
       return;
     }
 
     setLoading(true);
     try {
-      const ok = await login(email, password);
-      if (!ok) {
-        setErrorMessage('Invalid credentials. Check email and password.');
+      const result = await login(cleanEmail, cleanPass);
+      if (!result.success) {
+        setErrorMessage(result.error || 'Invalid credentials. Check email and password.');
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Login failed.');
@@ -38,8 +42,13 @@ export const LoginPage: React.FC = () => {
   const handleDemoClick = async () => {
     setLoading(true);
     setErrorMessage(null);
+    setEmail('admin@academy.edu');
+    setPassword('admin123');
     try {
-      await quickDemoLogin();
+      const result = await quickDemoLogin();
+      if (!result.success) {
+        setErrorMessage(result.error || 'Demo login failed.');
+      }
     } finally {
       setLoading(false);
     }
@@ -75,9 +84,9 @@ export const LoginPage: React.FC = () => {
           {errorMessage && (
             <div className="mb-5 p-3 rounded-lg bg-red-50 border border-red-200 flex items-start gap-2 text-red-800 text-xs">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-              <div>
+              <div className="flex-1">
                 <p className="font-semibold">Authentication Error</p>
-                <p className="mt-0.5">{errorMessage}</p>
+                <p className="mt-0.5 leading-relaxed">{errorMessage}</p>
               </div>
             </div>
           )}
@@ -93,10 +102,11 @@ export const LoginPage: React.FC = () => {
                 </div>
                 <input
                   id="email"
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@academy.edu"
+                  autoComplete="username"
                   required
                   className="block w-full pl-9 pr-3 py-2 text-sm text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 focus:outline-none transition-colors"
                 />
@@ -108,18 +118,27 @@ export const LoginPage: React.FC = () => {
                 Password
               </label>
               <div className="relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                   <Lock className="h-4 w-4" />
                 </div>
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="admin123"
+                  autoComplete="current-password"
                   required
-                  className="block w-full pl-9 pr-3 py-2 text-sm text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 focus:outline-none transition-colors"
+                  className="block w-full pl-9 pr-10 py-2 text-sm text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 focus:outline-none transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
@@ -155,13 +174,21 @@ export const LoginPage: React.FC = () => {
           <div className="mt-6 pt-5 border-t border-slate-100 text-xs text-slate-500">
             <div className="flex items-center gap-1.5 text-slate-700 font-medium mb-1">
               <Database className="w-3.5 h-3.5 text-slate-500" />
-              <span>Default Credentials & MongoDB Store</span>
+              <span>Default Administrator Credentials</span>
             </div>
-            <div className="font-mono text-[11px] bg-slate-50 p-2 rounded border border-slate-200 text-slate-600 mt-1 space-y-0.5">
-              <div>Email: <strong className="text-slate-800">admin@academy.edu</strong></div>
-              <div>Password: <strong className="text-slate-800">admin123</strong></div>
-              <div className="text-[10px] text-slate-400 mt-1">MongoDB persistence active on ./data/students.json</div>
+            <div className="font-mono text-[11px] bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-slate-600 mt-1 space-y-1">
+              <div className="flex items-center justify-between">
+                <span>Email:</span>
+                <code className="font-bold text-slate-900 bg-slate-200/60 px-1.5 py-0.5 rounded">admin@academy.edu</code>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Password:</span>
+                <code className="font-bold text-slate-900 bg-slate-200/60 px-1.5 py-0.5 rounded">admin123</code>
+              </div>
             </div>
+            <p className="text-[11px] text-slate-400 mt-2 text-center">
+              Clicking <strong>Instant Demo Login</strong> automatically signs in with default credentials.
+            </p>
           </div>
         </div>
       </div>

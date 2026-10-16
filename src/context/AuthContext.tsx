@@ -2,14 +2,20 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { AdminUser } from '../types/student.ts';
 import { api } from '../services/api.ts';
 import { useToast } from './ToastContext.tsx';
+import { safeStorage } from '../utils/safeStorage.ts';
+
+interface AuthResult {
+  success: boolean;
+  error?: string;
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: AdminUser | null;
   token: string | null;
-  login: (email: string, pass: string) => Promise<boolean>;
-  quickDemoLogin: () => Promise<boolean>;
+  login: (email: string, pass: string) => Promise<AuthResult>;
+  quickDemoLogin: () => Promise<AuthResult>;
   logout: () => void;
 }
 
@@ -25,50 +31,59 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const { success, error, info } = useToast();
 
   useEffect(() => {
-    // Check localStorage on mount
-    const savedToken = localStorage.getItem(TOKEN_KEY);
-    const savedUser = localStorage.getItem(USER_KEY);
+    // Check safeStorage on mount
+    try {
+      const savedToken = safeStorage.getItem(TOKEN_KEY);
+      const savedUser = safeStorage.getItem(USER_KEY);
 
-    if (savedToken && savedUser) {
-      try {
+      if (savedToken && savedUser) {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
-      } catch (e) {
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
       }
+    } catch (e) {
+      safeStorage.removeItem(TOKEN_KEY);
+      safeStorage.removeItem(USER_KEY);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
-  const login = async (email: string, pass: string): Promise<boolean> => {
+  const login = async (email: string, pass: string): Promise<AuthResult> => {
     try {
-      const response = await api.login(email, pass);
+      const cleanEmail = (email || '').trim();
+      const cleanPass = (pass || '').trim();
+
+      const response = await api.login(cleanEmail, cleanPass);
       if (response.success && response.token) {
         setToken(response.token);
         setUser(response.user);
-        localStorage.setItem(TOKEN_KEY, response.token);
-        localStorage.setItem(USER_KEY, JSON.stringify(response.user));
+        
+        safeStorage.setItem(TOKEN_KEY, response.token);
+        safeStorage.setItem(USER_KEY, JSON.stringify(response.user));
+        
         success('Logged In Successfully', `Welcome back, ${response.user.name}.`);
-        return true;
+        return { success: true };
       }
-      return false;
+      return { 
+        success: false, 
+        error: response.error || 'Authentication failed. Please verify credentials.' 
+      };
     } catch (err: any) {
-      const msg = err.error || 'Failed to authenticate administrator.';
-      error('Authentication Failed', msg);
-      return false;
+      const errMsg = err?.error || err?.message || 'Failed to authenticate administrator.';
+      error('Authentication Failed', errMsg);
+      return { success: false, error: errMsg };
     }
   };
 
-  const quickDemoLogin = async (): Promise<boolean> => {
+  const quickDemoLogin = async (): Promise<AuthResult> => {
     return login('admin@academy.edu', 'admin123');
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    safeStorage.removeItem(TOKEN_KEY);
+    safeStorage.removeItem(USER_KEY);
     info('Logged Out', 'Your administrator session has ended.');
   };
 

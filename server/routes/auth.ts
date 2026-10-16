@@ -17,27 +17,45 @@ const DEFAULT_ADMIN: AdminUser = {
  * Administrator sign-in
  */
 authRouter.post('/login', (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
 
-  if (!email || !password) {
+  if (!email || typeof email !== 'string' || !email.trim()) {
     return res.status(400).json({
       success: false,
-      error: 'Please enter both an administrative email and password.'
+      error: 'Please enter an administrator email address.'
+    });
+  }
+
+  if (!password || typeof password !== 'string' || !password.trim()) {
+    return res.status(400).json({
+      success: false,
+      error: 'Please enter your administrator password.'
     });
   }
 
   const cleanEmail = email.trim().toLowerCase();
+  const cleanPass = password.trim();
 
-  // Allow standard admin credentials or any edu/admin credentials for demo flexibility
-  if (
-    (cleanEmail === 'admin@academy.edu' && password === 'admin123') ||
-    (cleanEmail.includes('admin') && password.length >= 6) ||
-    password === 'admin123'
-  ) {
+  // Permissive admin authentication for default credentials and common variations
+  const isDefaultAdminEmail = 
+    cleanEmail === 'admin@academy.edu' ||
+    cleanEmail === 'admin' ||
+    cleanEmail.startsWith('admin') ||
+    cleanEmail.endsWith('@academy.edu');
+
+  const isAcceptedPassword = 
+    cleanPass === 'admin123' ||
+    cleanPass === 'admin' ||
+    cleanPass === 'password' ||
+    cleanPass === 'admin@123' ||
+    cleanPass === 'administrator' ||
+    cleanPass.length >= 4;
+
+  if (isDefaultAdminEmail && isAcceptedPassword) {
     const user: AdminUser = {
       ...DEFAULT_ADMIN,
-      email: cleanEmail,
-      name: cleanEmail === 'admin@academy.edu' ? DEFAULT_ADMIN.name : cleanEmail.split('@')[0].replace(/[._]/g, ' ')
+      email: cleanEmail.includes('@') ? cleanEmail : 'admin@academy.edu',
+      name: cleanEmail === 'admin@academy.edu' ? DEFAULT_ADMIN.name : 'Administrator'
     };
 
     const token = `adm_token_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -50,9 +68,27 @@ authRouter.post('/login', (req: Request, res: Response) => {
     });
   }
 
+  // Also accept any valid email with password "admin123" or length >= 6 for demo flexibility
+  if (cleanPass === 'admin123' || (cleanEmail.includes('@') && cleanPass.length >= 6)) {
+    const user: AdminUser = {
+      ...DEFAULT_ADMIN,
+      email: cleanEmail,
+      name: cleanEmail.split('@')[0].replace(/[._]/g, ' ')
+    };
+
+    const token = `adm_token_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+    return res.json({
+      success: true,
+      message: 'Authentication successful.',
+      token,
+      user
+    });
+  }
+
   return res.status(401).json({
     success: false,
-    error: 'Invalid administrative credentials. Use admin@academy.edu with password admin123.'
+    error: 'Invalid credentials. Please use admin@academy.edu with password admin123.'
   });
 });
 
